@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  ror2server:
+    #image: avivace/ror2server:latest
+    image: ror2_server:latest # 使用本地构建的镜像
+    container_name: ror2server
+    ports:
+      - "27015:27015/udp" # 游戏服务器默认端口
+      - "27016:27016/udp" # 心跳服务端口，如果R2_HEARTBEAT设置为1，则需要此端口
+    environment:
+      - R2_PLAYERS=4 # 最大玩家数量 (默认是 4)
+      - R2_HEARTBEAT=0 # 是否向主服务器广播并列在服务器浏览器中
+      - R2_HOSTNAME="My Risk of Rain 2 Server" # 服务器在服务器浏览器中显示的名称
+      - R2_PSW="" # 加入服务器所需的密码 (留空表示无密码)
+      - R2_ENABLE_MODS=0 # 是否启用 Mod 支持 (设置为 1 启用，需要挂载 Mod 文件夹)
+      #- R2_QUERY_PORT=27015 # Steamworks 连接的监听端口(通常不需要更改)
+      #- R2_SV_PORT=27015 # 游戏服务器的监听端口(通常不需要更改)
+    volumes:
+      - ./mods:/home/steam/ror2ds-mods # 挂载本地的 mods 文件夹到容器内的 /mods
+      - './app:/root/ror2-dedicated/app'
